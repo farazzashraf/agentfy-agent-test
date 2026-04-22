@@ -53,7 +53,7 @@ async def chat_proxy(tenant_id: str, request: ChatRequest):
         # B. Boot up the Gemini Model with the Business's rules
         # Using gemini-1.5-flash as it is lightning fast and free-tier eligible
         model = genai.GenerativeModel(
-            model_name="gemini-1.5-flash",
+            model_name="gemini-2.5-flash",
             system_instruction=system_prompt
         )
         
