@@ -1,0 +1,64 @@
+name: "Restaurant FAQ Agent"
+description: "Answers customer questions about your restaurant instantly. Menu, hours, location, reservations policy, allergies — all handled automatically."
+version: "1.0.0"
+trigger: webhook
+interface:
+  type: chat
+  greeting: "Hi! I'm here to help with any questions about our restaurant. Ask me anything!"
+  placeholder: "What are your opening hours? Do you have vegan options?"
+fields:
+  - name: restaurant_name
+    type: text
+    label: "Restaurant Name"
+    required: true
+
+  - name: cuisine_type
+    type: text
+    label: "Cuisine Type (e.g. Indian, Italian, Chinese)"
+    required: true
+
+  - name: opening_hours
+    type: textarea
+    label: "Opening Hours"
+    placeholder: "Mon-Fri: 11am-10pm, Sat-Sun: 10am-11pm"
+    required: true
+
+  - name: address
+    type: text
+    label: "Full Address"
+    required: true
+
+  - name: phone_number
+    type: text
+    label: "Phone Number"
+    required: true
+
+  - name: menu_highlights
+    type: textarea
+    label: "Top Menu Items (describe your best dishes)"
+    placeholder: "Butter Chicken, Paneer Tikka, Biryani..."
+    required: true
+
+  - name: price_range
+    type: select
+    label: "Price Range"
+    options: ["Budget (Under ₹500)", "Mid-range (₹500-₹1500)", "Premium (₹1500+)"]
+    required: true
+
+  - name: dietary_options
+    type: text
+    label: "Dietary Options Available"
+    placeholder: "Vegan, Vegetarian, Gluten-free, Jain"
+    required: false
+
+  - name: parking_info
+    type: text
+    label: "Parking Information"
+    placeholder: "Free parking available in basement"
+    required: false
+
+  - name: reservation_policy
+    type: textarea
+    label: "Reservation Policy"
+    placeholder: "Reservations recommended for weekends. Call us or walk in on weekdays."
+    required: false
