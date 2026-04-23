@@ -1,5 +1,5 @@
 fastapi[standard]
 uvicorn
-google-cloud-firestore
 google-generativeai
 pydantic
+python-dotenv

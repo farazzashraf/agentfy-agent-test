@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Playground</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.1);
+            --glass: rgba(255, 255, 255, 0.03);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        #sidebar {
+            width: 350px;
+            background: var(--card-bg);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            overflow-y: auto;
+            backdrop-filter: blur(10px);
+        }
+
+        h2 {
+            font-size: 1.25rem;
+            margin-bottom: 24px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 12px;
+            color: white;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--primary);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* Main Chat Area */
+        #main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.05), transparent);
+        }
+
+        #chat-header {
+            padding: 20px 40px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        #chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 18px;
+            border-radius: 16px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            position: relative;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background: var(--primary);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.agent {
+            align-self: flex-start;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            color: var(--text);
+            border-bottom-left-radius: 4px;
+        }
+
+        .typing {
+            font-style: italic;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-top: -10px;
+        }
+
+        #chat-input-container {
+            padding: 24px 40px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+            background: rgba(15, 23, 42, 0.8);
+        }
+
+        #chat-input {
+            flex: 1;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 12px 24px;
+            color: white;
+            outline: none;
+        }
+
+        #send-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 24px;
+            padding: 0 24px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        #send-btn:hover {
+            background: var(--primary-hover);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="sidebar">
+        <h2>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary)"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+            Configuration
+        </h2>
+        <div id="config-form">
+            <!-- Dynamically populated -->
+            <p style="color: var(--text-muted)">Loading config...</p>
+        </div>
+    </div>
+
+    <div id="main">
+        <div id="chat-header">
+            <h1 id="agent-name" style="font-size: 1.1rem; font-weight: 500;">AI Assistant</h1>
+            <p id="agent-desc" style="font-size: 0.8rem; color: var(--text-muted);">Previewing your agent</p>
+        </div>
+
+        <div id="chat-messages">
+            <!-- Messages go here -->
+        </div>
+
+        <div id="chat-input-container">
+            <input type="text" id="chat-input" placeholder="Type your message..." autocomplete="off">
+            <button id="send-btn">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const configForm = document.getElementById('config-form');
+        const chatMessages = document.getElementById('chat-messages');
+        const chatInput = document.getElementById('chat-input');
+        const sendBtn = document.getElementById('send-btn');
+        const agentName = document.getElementById('agent-name');
+        const agentDesc = document.getElementById('agent-desc');
+
+        let agentConfig = null;
+
+        // Fetch config on load
+        async function fetchConfig() {
+            try {
+                const response = await fetch('/config');
+                agentConfig = await response.json();
+                renderForm(agentConfig);
+                
+                agentName.textContent = agentConfig.name || "AI Assistant";
+                agentDesc.textContent = agentConfig.description || "Previewing your agent";
+                
+                if (agentConfig.interface?.greeting) {
+                    addMessage(agentConfig.interface.greeting, 'agent');
+                }
+                if (agentConfig.interface?.placeholder) {
+                    chatInput.placeholder = agentConfig.interface.placeholder;
+                }
+            } catch (error) {
+                configForm.innerHTML = `<p style="color: #ef4444">Error loading config: ${error.message}</p>`;
+            }
+        }
+
+        function renderForm(config) {
+            configForm.innerHTML = '';
+            config.fields.forEach(field => {
+                const group = document.createElement('div');
+                group.className = 'form-group';
+                
+                const label = document.createElement('label');
+                label.textContent = field.label || field.name;
+                group.appendChild(label);
+
+                let input;
+                if (field.type === 'textarea') {
+                    input = document.createElement('textarea');
+                } else if (field.type === 'select') {
+                    input = document.createElement('select');
+                    field.options.forEach(opt => {
+                        const o = document.createElement('option');
+                        o.value = opt;
+                        o.textContent = opt;
+                        input.appendChild(o);
+                    });
+                } else {
+                    input = document.createElement('input');
+                    input.type = 'text';
+                }
+                
+                input.name = field.name;
+                input.id = `field-${field.name}`;
+                if (field.placeholder) input.placeholder = field.placeholder;
+                
+                // Add some default values for easier testing
+                if (field.name === 'restaurant_name') input.value = "The Hungry Bot";
+                if (field.name === 'cuisine_type') input.value = "Modern AI Fusion";
+                
+                group.appendChild(input);
+                configForm.appendChild(group);
+            });
+        }
+
+        function addMessage(text, role) {
+            const msg = document.createElement('div');
+            msg.className = `message ${role}`;
+            msg.textContent = text;
+            chatMessages.appendChild(msg);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const text = chatInput.value.trim();
+            if (!text) return;
+
+            addMessage(text, 'user');
+            chatInput.value = '';
+
+            // Build context from form
+            const context = {};
+            const inputs = configForm.querySelectorAll('input, textarea, select');
+            inputs.forEach(input => {
+                context[input.name] = input.value;
+            });
+
+            // Add typing indicator
+            const typing = document.createElement('div');
+            typing.className = 'typing';
+            typing.textContent = 'Agent is thinking...';
+            chatMessages.appendChild(typing);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            try {
+                const response = await fetch('/chat/test-tenant', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: text,
+                        injected_context: context
+                    })
+                });
+
+                const data = await response.json();
+                typing.remove();
+
+                if (data.status === 'success') {
+                    addMessage(data.reply, 'agent');
+                } else {
+                    addMessage('Error: ' + (data.detail || 'Unknown error'), 'agent');
+                }
+            } catch (error) {
+                typing.remove();
+                addMessage('Error connecting to agent: ' + error.message, 'agent');
+            }
+        }
+
+        sendBtn.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        fetchConfig();
+    </script>
+</body>
+</html>
