@@ -92,7 +92,7 @@ async def root_post(request: ChatRequest):
 
     try:
         model = genai.GenerativeModel(
-            model_name="gemini-1.5-flash", # Fixed model name to 1.5
+            model_name="gemini-2.5-flash", # Fixed model name to 1.5
             system_instruction=system_prompt
         )
         
