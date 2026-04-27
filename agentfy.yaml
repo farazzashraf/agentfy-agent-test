@@ -3,7 +3,7 @@ version: "1.0"
 # 1. Basic Metadata (For the Storefront)
 agent:
   name: "Restaurant FAQ Agent"
-  developer_id: "dev_restaurant_pro"
+  developer_id: "dev_test_1"
   short_description: "Answers customer questions about your restaurant instantly."
   description: "Answers customer questions about your restaurant instantly. Menu, hours, location, reservations policy, allergies — all handled automatically."
   category: "customer_service"
