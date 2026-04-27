@@ -84,6 +84,6 @@ required_business_inputs:
 # Other configurations
 trigger: webhook
 interface:
-  type: chat
+  type: chatbot
   greeting: "Hi! I'm here to help with any questions about our restaurant. Ask me anything!"
   placeholder: "What are your opening hours? Do you have vegan options?"
