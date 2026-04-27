@@ -146,6 +146,19 @@ async def embed(request: EmbedRequest):
         raise HTTPException(status_code=500, detail=f"AI error: {str(e)}")
 
 
+@app.post("/sync")
+async def sync(payload: dict):
+    """
+    Standardized sync endpoint called by the Gateway.
+    For this FAQ agent, we don't need to sync any state, 
+    so we just return success.
+    """
+    return {
+        "status": "success",
+        "state": payload.get("state", {})
+    }
+
+
 @app.get("/config")
 async def get_config():
     try:
