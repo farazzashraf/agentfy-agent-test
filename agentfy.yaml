@@ -24,59 +24,59 @@ demo_simulation:
   simulated_output_description: "The agent will provide accurate information about the restaurant's schedule and menu highlights."
 
 # 5. Business Onboarding Schema
-required_business_inputs:
+installation_config:
   - field_id: "restaurant_name"
-    label: "Restaurant Name"
+    name: "Restaurant Name"
     type: "text"
     required: true
 
   - field_id: "cuisine_type"
-    label: "Cuisine Type (e.g. Indian, Italian, Chinese)"
+    name: "Cuisine Type (e.g. Indian, Italian, Chinese)"
     type: "text"
     required: true
 
   - field_id: "opening_hours"
-    label: "Opening Hours"
+    name: "Opening Hours"
     type: "textarea"
     placeholder: "Mon-Fri: 11am-10pm, Sat-Sun: 10am-11pm"
     required: true
 
   - field_id: "address"
-    label: "Full Address"
+    name: "Full Address"
     type: "text"
     required: true
 
   - field_id: "phone_number"
-    label: "Phone Number"
+    name: "Phone Number"
     type: "text"
     required: true
 
   - field_id: "menu_highlights"
-    label: "Top Menu Items (describe your best dishes)"
+    name: "Top Menu Items (describe your best dishes)"
     type: "textarea"
     placeholder: "Butter Chicken, Paneer Tikka, Biryani..."
     required: true
 
   - field_id: "price_range"
-    label: "Price Range"
+    name: "Price Range"
     type: "select"
     options: ["Budget (Under ₹500)", "Mid-range (₹500-₹1500)", "Premium (₹1500+)"]
     required: true
 
   - field_id: "dietary_options"
-    label: "Dietary Options Available"
+    name: "Dietary Options Available"
     type: "text"
     placeholder: "Vegan, Vegetarian, Gluten-free, Jain"
     required: false
 
   - field_id: "parking_info"
-    label: "Parking Information"
+    name: "Parking Information"
     type: "text"
     placeholder: "Free parking available in basement"
     required: false
 
   - field_id: "reservation_policy"
-    label: "Reservation Policy"
+    name: "Reservation Policy"
     type: "textarea"
     placeholder: "Reservations recommended for weekends. Call us or walk in on weekdays."
     required: false
