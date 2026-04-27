@@ -1,64 +1,89 @@
-name: "Restaurant FAQ Agent"
-description: "Answers customer questions about your restaurant instantly. Menu, hours, location, reservations policy, allergies — all handled automatically."
-version: "1.0.0"
+version: "1.0"
+
+# 1. Basic Metadata (For the Storefront)
+agent:
+  name: "Restaurant FAQ Agent"
+  developer_id: "dev_restaurant_pro"
+  short_description: "Answers customer questions about your restaurant instantly."
+  description: "Answers customer questions about your restaurant instantly. Menu, hours, location, reservations policy, allergies — all handled automatically."
+  category: "customer_service"
+
+# 2. Defining the Agent's Shape
+interaction_mode: "chat_widget" 
+
+# 3. Mode-Specific Configurations
+ui_capabilities:
+  has_custom_avatar: true
+  supports_file_uploads: false
+  allowed_placements: ["bottom_right", "bottom_left"]
+
+# 4. Demo Simulation
+demo_simulation:
+  input_label: "Ask about our menu or hours:"
+  sample_input: "What are your opening hours on weekends?"
+  simulated_output_description: "The agent will provide accurate information about the restaurant's schedule and menu highlights."
+
+# 5. Business Onboarding Schema
+required_business_inputs:
+  - field_id: "restaurant_name"
+    label: "Restaurant Name"
+    type: "text"
+    required: true
+
+  - field_id: "cuisine_type"
+    label: "Cuisine Type (e.g. Indian, Italian, Chinese)"
+    type: "text"
+    required: true
+
+  - field_id: "opening_hours"
+    label: "Opening Hours"
+    type: "textarea"
+    placeholder: "Mon-Fri: 11am-10pm, Sat-Sun: 10am-11pm"
+    required: true
+
+  - field_id: "address"
+    label: "Full Address"
+    type: "text"
+    required: true
+
+  - field_id: "phone_number"
+    label: "Phone Number"
+    type: "text"
+    required: true
+
+  - field_id: "menu_highlights"
+    label: "Top Menu Items (describe your best dishes)"
+    type: "textarea"
+    placeholder: "Butter Chicken, Paneer Tikka, Biryani..."
+    required: true
+
+  - field_id: "price_range"
+    label: "Price Range"
+    type: "select"
+    options: ["Budget (Under ₹500)", "Mid-range (₹500-₹1500)", "Premium (₹1500+)"]
+    required: true
+
+  - field_id: "dietary_options"
+    label: "Dietary Options Available"
+    type: "text"
+    placeholder: "Vegan, Vegetarian, Gluten-free, Jain"
+    required: false
+
+  - field_id: "parking_info"
+    label: "Parking Information"
+    type: "text"
+    placeholder: "Free parking available in basement"
+    required: false
+
+  - field_id: "reservation_policy"
+    label: "Reservation Policy"
+    type: "textarea"
+    placeholder: "Reservations recommended for weekends. Call us or walk in on weekdays."
+    required: false
+
+# Other configurations
 trigger: webhook
 interface:
   type: chat
   greeting: "Hi! I'm here to help with any questions about our restaurant. Ask me anything!"
   placeholder: "What are your opening hours? Do you have vegan options?"
-fields:
-  - name: restaurant_name
-    type: text
-    label: "Restaurant Name"
-    required: true
-
-  - name: cuisine_type
-    type: text
-    label: "Cuisine Type (e.g. Indian, Italian, Chinese)"
-    required: true
-
-  - name: opening_hours
-    type: textarea
-    label: "Opening Hours"
-    placeholder: "Mon-Fri: 11am-10pm, Sat-Sun: 10am-11pm"
-    required: true
-
-  - name: address
-    type: text
-    label: "Full Address"
-    required: true
-
-  - name: phone_number
-    type: text
-    label: "Phone Number"
-    required: true
-
-  - name: menu_highlights
-    type: textarea
-    label: "Top Menu Items (describe your best dishes)"
-    placeholder: "Butter Chicken, Paneer Tikka, Biryani..."
-    required: true
-
-  - name: price_range
-    type: select
-    label: "Price Range"
-    options: ["Budget (Under ₹500)", "Mid-range (₹500-₹1500)", "Premium (₹1500+)"]
-    required: true
-
-  - name: dietary_options
-    type: text
-    label: "Dietary Options Available"
-    placeholder: "Vegan, Vegetarian, Gluten-free, Jain"
-    required: false
-
-  - name: parking_info
-    type: text
-    label: "Parking Information"
-    placeholder: "Free parking available in basement"
-    required: false
-
-  - name: reservation_policy
-    type: textarea
-    label: "Reservation Policy"
-    placeholder: "Reservations recommended for weekends. Call us or walk in on weekdays."
-    required: false

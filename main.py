@@ -27,6 +27,10 @@ class ChatRequest(BaseModel):
     injected_context: dict = {}  # Made optional for Playground compatibility
 
 
+class EmbedRequest(BaseModel):
+    text: str
+
+
 def build_system_prompt(config: dict) -> str:
     # Use fallback if config is empty (Playground case)
     restaurant_name = config.get('restaurant_name', 'our restaurant')
@@ -109,6 +113,36 @@ async def root_post(request: ChatRequest):
     except Exception as e:
         # Log error for debugging (visible in Cloud Run logs)
         print(f"Error calling Gemini: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"AI error: {str(e)}")
+
+
+@app.post("/embed")
+async def embed(request: EmbedRequest):
+    """
+    Standardized embedding endpoint.
+    Uses the proxied Gemini API if BASE_URL is provided.
+    """
+    if not GEMINI_API_KEY:
+        raise HTTPException(status_code=500, detail="GEMINI_API_KEY not configured.")
+
+    base_url = os.getenv("GEMINI_BASE_URL")
+    if base_url:
+        from google.api_core import client_options
+        genai.configure(
+            api_key=GEMINI_API_KEY,
+            transport='rest',
+            client_options=client_options.ClientOptions(api_endpoint=base_url)
+        )
+
+    try:
+        result = genai.embed_content(
+            model="models/gemini-embedding-2",
+            content=request.text,
+            task_type="retrieval_document"
+        )
+        return {"status": "success", "embedding": result['embedding']}
+    except Exception as e:
+        print(f"Error calling Gemini Embedding: {str(e)}")
         raise HTTPException(status_code=500, detail=f"AI error: {str(e)}")
 
 
