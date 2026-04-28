@@ -252,6 +252,12 @@ async def chat(request: Request, body: ChatRequest):
     model   = genai.GenerativeModel(
         model_name=MODEL_NAME,
         system_instruction=build_system_prompt(config),
+        safety_settings={
+            genai.types.HarmCategory.HARM_CATEGORY_HATE_SPEECH: genai.types.HarmBlockThreshold.BLOCK_NONE,
+            genai.types.HarmCategory.HARM_CATEGORY_HARASSMENT: genai.types.HarmBlockThreshold.BLOCK_NONE,
+            genai.types.HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: genai.types.HarmBlockThreshold.BLOCK_NONE,
+            genai.types.HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: genai.types.HarmBlockThreshold.BLOCK_NONE,
+        }
     )
 
     reply = await _call_gemini_chat(model, body.message, history)
