@@ -100,14 +100,20 @@ async def root_post(request: ChatRequest):
             system_instruction=system_prompt
         )
         
-        # Include history if available (Gemini SDK format: [{'role': 'user', 'parts': [...]}, ...])
-        # For simplicity, we just send the single message for now or implement chat session
-        chat_session = model.start_chat(history=[])
+        # Use the history from the request, limiting to last 10 messages (approx 5 rounds)
+        # to keep context relevant and save on tokens.
+        chat_history = request.history[-10:] if request.history else []
+        
+        chat_session = model.start_chat(history=chat_history)
         response = chat_session.send_message(request.message)
 
         return {
             "status": "success",
-            "response": response.text
+            "response": response.text,
+            "history": chat_history + [
+                {"role": "user", "parts": [request.message]},
+                {"role": "model", "parts": [response.text]}
+            ]
         }
 
     except Exception as e:
