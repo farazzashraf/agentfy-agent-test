@@ -1,6 +1,8 @@
 fastapi[standard]
 uvicorn
 google-generativeai
+google-api-core
 pydantic
 python-dotenv
 PyYAML
+slowapi
